@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,25 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserProfileComponent implements OnInit {
 
-  constructor() { }
+  userObj;
+
+  constructor(private hc: HttpClient) { }
 
   ngOnInit(): void {
+    //first approach:make http get req to user -api
+    //second approach: get user data from local storage
+    this.userObj = JSON.parse(localStorage.getItem("userObj"));
   }
 
+  getPrivateData(){
+    this.hc.get('/user/testing').subscribe(
+      res => {
+        alert(res['message']);
+      },
+      err => {
+        console.log(err);
+        alert(err.message);
+      }
+    )
+  }
 }

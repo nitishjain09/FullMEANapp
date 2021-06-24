@@ -5,6 +5,9 @@ const expressErrorHandler = require('express-async-handler');
 const brcyptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const checkToken = require("./middlewares/verifyToken");
+
+
 //add bodyparsing middleware
 userApi.use(exp.json())
 
@@ -306,12 +309,20 @@ userApi.post('/login', expressErrorHandler( async(req, res) => {
         }
         else{
             //create a token
-            let signedToken = jwt.sign({ username: credentials.username}, 'abcdef', {expiresIn: 120 });
+            let signedToken = jwt.sign({ username: credentials.username}, 'abcdef', {expiresIn: 10 });
             //send token to client
             res.send({ message: "login success", token: signedToken, username: credentials.username, userObj: user });
         }
     }
 }))
+
+
+
+//dummy route to create protected resource
+userApi.get('/testing', checkToken, (req, res) => {
+    res.send({ message: "This is protected data"});
+})
+
 
 
 //export
