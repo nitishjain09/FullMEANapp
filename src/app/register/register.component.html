@@ -1,0 +1,53 @@
+<h2 class="text-center mt-5">SignUp here</h2>
+
+<div class="row">
+    <div class="col-sm-2 col-md-3"></div>
+    <div class="col-sm-8 col-md-6">
+        <form #ref="ngForm" (ngSubmit)="onSignUp(ref.value)">
+            <div class="mb-3">
+                <label for="un" class="form-label">Username</label>
+                <input type="text" class="form-control" id="un" name="username" ngModel>
+            </div>
+            <div class="mb-3">
+                <label for="pw" class="form-label">Password</label>
+                <input type="password" class="form-control" id="pw"  name="password" ngModel>
+            </div>
+        
+            <div class="mb-3">
+                <label for="dob" class="form-label">Date of birth</label>
+                <input type="date" class="form-control" id="dob" name="dob" ngModel>
+            </div>
+        
+        
+            <div class="mb-3">
+                <label for="em" class="form-label">Email</label>
+                <input type="email" class="form-control" id="em" name="email" ngModel>
+            </div>
+        
+            <button class="btn btn-success d-block mx-auto m-4" type="submit">Sign Up</button>
+        </form>
+    </div>
+    <div class="col-sm-2 col-md-3"></div>
+</div>
+
+<!-- <p class="display-4 text-center text-info m-5">Signup here</p>
+<form #ref="ngForm" (ngSubmit)="onSignUp(ref.value)" class="w-75 mx-auto mt-5">
+    <div class="form-floating mb-3">
+        <input type="username" class="form-control" id="username" placeholder="name@example.com" name="username"
+            ngModel>
+        <label for="username">Username</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="password" placeholder="Password" name="password" ngModel>
+        <label for="password">Password</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email" ngModel>
+        <label for="email">Email </label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="date" class="form-control" id="dob" placeholder="Email" name="dob" ngModel>
+        <label for="dob">Date of birth</label>
+    </div>
+    <button class="btn btn-success" type="submit">Signup</button>
+</form> -->
