@@ -1,4 +1,4 @@
-<h2 class="text-center mt-5">SignUp here</h2>
+<!-- <h2 class="text-center mt-5">SignUp here</h2>
 
 <div class="row">
     <div class="col-sm-2 col-md-3"></div>
@@ -28,9 +28,9 @@
         </form>
     </div>
     <div class="col-sm-2 col-md-3"></div>
-</div>
+</div> -->
 
-<!-- <p class="display-4 text-center text-info m-5">Signup here</p>
+<p class="display-4 text-center text-info m-5">Signup here</p>
 <form #ref="ngForm" (ngSubmit)="onSignUp(ref.value)" class="w-75 mx-auto mt-5">
     <div class="form-floating mb-3">
         <input type="username" class="form-control" id="username" placeholder="name@example.com" name="username"
@@ -49,5 +49,8 @@
         <input type="date" class="form-control" id="dob" placeholder="Email" name="dob" ngModel>
         <label for="dob">Date of birth</label>
     </div>
+
+    <input type="file" name="photo" class="form-control mb-3" ngModel (change)="selectFile($event)">
+    
     <button class="btn btn-success" type="submit">Signup</button>
-</form> -->
+</form>

@@ -7,6 +7,33 @@ const jwt = require('jsonwebtoken');
 
 const checkToken = require("./middlewares/verifyToken");
 
+//import cloudinary modules
+const cloudinary = require("cloudinary").v2;
+const multer = require("multer");         //default exports till now
+const {CloudinaryStorage} = require("multer-storage-cloudinary");  //this is named export
+
+//configure cloudinary
+cloudinary.config({
+    cloud_name: 'dbd3ccvyb',
+    api_key: '285915264758155',
+    api_secret: 'Xrw2iUrbzh1a6IFudslmFLXucqY'
+})
+
+//configure multer-storage-cloudinary
+const clStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: async(req, file) => {
+        return{
+            folder: "appFiles",
+            public_id: file.fieldname+'-'+Date.now()
+        }
+    }
+})
+
+//configure multer
+const multerObj = multer({ storage: clStorage });
+
+
 
 //add bodyparsing middleware
 userApi.use(exp.json())
@@ -14,8 +41,11 @@ userApi.use(exp.json())
 
 //import MongoCLient
 const mc = require("mongodb").MongoClient;
+const { config } = require('rxjs');
 
 
+//shifted to server.js
+/*
 //connection string
 const databaseUrl = "mongodb+srv://myFirstDB:nitisss@backend.zf0nd.mongodb.net/firstdb?retryWrites=true&w=majority";
 
@@ -35,6 +65,7 @@ mc.connect(databaseUrl, {useNewUrlParser: true, useUnifiedTopology: true}, (err,
         console.log("connected to database");
     }
 })
+*/
 
 /*
 //sample route
@@ -77,6 +108,7 @@ userApi.get("/getUsers", (req, res, next) => {
 
 //getUsers using async and await
 userApi.get("/getUsers", expressErrorHandler( async (req, res, next) => {
+    let userCollectionObj = req.app.get("userCollectionObj");
 
     let userList = await userCollectionObj.find().toArray();
     res.send({ message: userList });
@@ -137,6 +169,7 @@ userApi.get("/getUser/:username", (req, res ,next) => {
 
 // get user by username using async and await
 userApi.get("/getUser/:username", expressErrorHandler( async (req, res ,next) => {
+    let userCollectionObj = req.app.get("userCollectionObj");
 
     //get username from Url
     let un = req.params.username;
@@ -188,9 +221,12 @@ userApi.post("/createUser", (req, res, next) => {
 
 
 //create user
-userApi.post("/createUser", expressErrorHandler( async (req, res, next) => {
+userApi.post("/createUser", multerObj.single('photo'), expressErrorHandler( async (req, res, next) => {
+    
+    let userCollectionObj = req.app.get("userCollectionObj");
+
     //get user obj
-    let newUser = req.body;
+    let newUser = JSON.parse(req.body.userObj);
     //search for existing user
     let user = await userCollectionObj.findOne({ username: newUser.username});
 
@@ -203,6 +239,9 @@ userApi.post("/createUser", expressErrorHandler( async (req, res, next) => {
         let hashedPassword = await brcyptjs.hash(newUser.password, 7);
         //replace password
         newUser.password = hashedPassword;
+        //add image url
+        newUser.profileImage = req.file.path;
+        delete newUser.photo;
         //insert
         await userCollectionObj.insertOne(newUser);
         res.send({ message: 'User created'});
@@ -212,6 +251,8 @@ userApi.post("/createUser", expressErrorHandler( async (req, res, next) => {
 
 //http://localhost:3000/user/updateUser/<username>
 userApi.put("/updateUser/:username", (req, res, next) => {
+
+    let userCollectionObj = req.app.get("userCollectionObj");
 
     //get modified user
     let modifiedUser = req.body;
@@ -231,6 +272,9 @@ userApi.put("/updateUser/:username", (req, res, next) => {
 })
 
 userApi.put("/updateUser/:username", expressErrorHandler( async (req, res, next) => {
+    
+    let userCollectionObj = req.app.get("userCollectionObj");
+    
     //get modified username
     let modifiedUser = req.body;
     //update
@@ -274,6 +318,8 @@ userApi.delete("/deleteUser/:username", (req, res, next) => {
 //delete user
 userApi.delete("/deleteUser/:username", async (req, res) => {
 
+    let userCollectionObj = req.app.get("userCollectionObj");
+
     //get username from url
     let un = req.params.username;
 
@@ -291,6 +337,8 @@ userApi.delete("/deleteUser/:username", async (req, res) => {
 
 //user login
 userApi.post('/login', expressErrorHandler( async(req, res) => {
+
+    let userCollectionObj = req.app.get("userCollectionObj");
 
     //get user credentials
     let credentials = req.body;

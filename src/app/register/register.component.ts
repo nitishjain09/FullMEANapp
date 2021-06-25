@@ -15,8 +15,25 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
+  file:File;
+
+  selectFile(event){
+    this.file = event.target.files[0];
+    //console.log(this.file);
+  }
+
   onSignUp(userObj){
-    this.us.createUser(userObj).subscribe(
+
+    //create FormData obj
+    let formData = new FormData();
+    //add file
+    formData.append("photo", this.file, this.file.name);
+    //add userObj
+    formData.append("userObj", JSON.stringify(userObj));
+
+
+    this.us.createUser(formData).subscribe(
       res => {
         if(res.message === "User created"){
           alert("User created");

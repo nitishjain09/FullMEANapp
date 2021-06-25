@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-ser
+
   userLoginStatus = false;
 
   //inject http client object
